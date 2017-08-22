@@ -1,3 +1,22 @@
-{% extends "base.html" %}
+{% extends "chat/base.html" %}
 
 {% block header_text %}Multichat{% endblock %}
+
+{% block content %}
+
+	<ul class="rooms">
+		{% for room in rooms %}
+			<li class="room-link" data-room-id="{{ room.id }}">{{ room }}</li>
+			{% empty %}
+			<p class="empty">No chat rooms defined. Maybe make some in the <a href="{% url 'admin:index' %} ">admin???</a> 
+			</p>
+
+
+		{% endfor %}
+	</ul>
+
+	<div id="chats">
+		
+	</div>	
+
+{% endblock %}
