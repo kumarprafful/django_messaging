@@ -1,12 +1,16 @@
 import json
-from channels.auth import channel_session_user_from_http
-from channels import CHannel
+from channels.auth import channel_session_user_from_http, channel_session_user
+from channels import Channel
+from .settings import MSG_TYPE_LEAVE, MSG_TYPE_ENTER, NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS
+from .models import Room
+from .utils import get_room_or_error, catch_client_error
+from . exceptions import ClientError
 
 
 
 @channel_session_user_from_http
 def ws_connect(message):
-	message.reply_channel.send({"accept": True})
+	#message.reply_channel.send({"accept": True})
 	message.channel_session['rooms'] = []
 
 @channel_session_user
@@ -36,7 +40,7 @@ def chat_join(message):
 		room.send_message(None, message.user, MSG_TYPE_ENTER)
 
 		room.websocket_group.add(message.reply_channel)
-		message.channel_session['rooms'] = lsit(set(message.channel_session['rooms']).union([room.id]))
+		message.channel_session['rooms'] = list(set(message.channel_session['rooms']).union([room.id]))
 		message.reply_channel.send({
 			"text": json.dumps({
 				"join": str(room.id),
@@ -55,7 +59,7 @@ def chat_leave(message):
 		room.send.message(None, message.user, MSG_TYPE_LEAVE)
 
 		room.websocket_group.discard(message.reply_channel)
-		message.channel_session['rooms'] = lisyt(set(message.channel_session['rooms']).difference([room.id]))
+		message.channel_session['rooms'] = list(set(message.channel_session['rooms']).difference([room.id]))
 		#send a msg back that will prompt them to close the room
 		message.reply_channel.send({
 			"text": json.dumps({
