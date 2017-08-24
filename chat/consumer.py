@@ -43,3 +43,22 @@ def chat_join(message):
 				"title": room.title,
 				}),
 			})
+
+@channel_session_user
+@catch_client_error
+def chat_leave(message):
+	#this is reverse of chat_join
+	room = get_room_or_error(message["room"], message.user)
+
+	#send a "leave msg" to the room if availbale
+	if NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS:
+		room.send.message(None, message.user, MSG_TYPE_LEAVE)
+
+		room.websocket_group.discard(message.reply_channel)
+		message.channel_session['rooms'] = lisyt(set(message.channel_session['rooms']).difference([room.id]))
+		#send a msg back that will prompt them to close the room
+		message.reply_channel.send({
+			"text": json.dumps({
+				"leave": str(room.id),
+				}),
+			})
