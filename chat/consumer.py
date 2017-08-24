@@ -62,3 +62,11 @@ def chat_leave(message):
 				"leave": str(room.id),
 				}),
 			})
+
+@channel_session_user
+@catch_client_error
+def chat_send(message):
+	if int(message['room']) not in message.channel_session['rooms']:
+		raise ClientError("ROOM_ACCESS_DENIED")
+	room = get_room_or_error(message["room"], message.user)
+	room.send_message(message["message"], message.user)
