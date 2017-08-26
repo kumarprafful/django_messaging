@@ -10,7 +10,7 @@ from .exceptions import ClientError
 
 @channel_session_user_from_http
 def ws_connect(message):
-	message.reply_channel.send({"accept": True})
+	message.reply_channel.send({'accept': True})
 	message.channel_session['rooms'] = []
 
 @channel_session_user
@@ -28,7 +28,7 @@ def ws_disconnect(message):
 def ws_receive(message):
 	payload = json.loads(message['text'])
 	payload['reply_channel'] = message.content['reply_channel']
-	Channel("char.receive").send(payload)
+	Channel("chat.receive").send(payload)
 
 
 @channel_session_user
@@ -56,7 +56,7 @@ def chat_leave(message):
 
 	#send a "leave msg" to the room if availbale
 	if NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS:
-		room.send.message(None, message.user, MSG_TYPE_LEAVE)
+		room.send_message(None, message.user, MSG_TYPE_LEAVE)
 
 	room.websocket_group.discard(message.reply_channel)
 	message.channel_session['rooms'] = list(set(message.channel_session['rooms']).difference([room.id]))
