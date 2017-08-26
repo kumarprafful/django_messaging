@@ -10,8 +10,6 @@
 			{% empty %}
 			<p class="empty">No chat rooms defined. Maybe make some in the <a href="{% url 'admin:index' %} ">admin???</a> 
 			</p>
-
-
 		{% endfor %}
 	</ul>
 
@@ -19,4 +17,8 @@
 		
 	</div>	
 
+{% endblock %}
+
+{% block extra_body %}
+    
 {% endblock %}

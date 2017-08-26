@@ -11,6 +11,11 @@ class Room(models.Model):
 
 	staff_only = models.BooleanField(default=False)
 
+	def __str__(self):
+		return self.title
+
+
+
 	@property
 	def websocket_group(self):
 		'''
@@ -28,7 +33,7 @@ class Room(models.Model):
 		#send out the message to everyone in the room
 		self.websocket_group.send(
 			{"text": json.dumps(final_msg)}
-			)
+		)
 
 
 
@@ -36,5 +41,4 @@ class Room(models.Model):
 
 
 
-	def str(self):
-		return self.title
+	

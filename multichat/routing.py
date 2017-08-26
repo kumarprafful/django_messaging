@@ -5,7 +5,7 @@ def message_handler(message):
 	print(message['text'])
 
 channel_routing = [
-	route("websocket.receive", message_handler),
+	#route("websocket.receive", message_handler),
 	include("chat.routing.websocket_routing", path=r"^/chat/stream"),
 	include("chat.routing.custom_routing"),
 	

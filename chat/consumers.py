@@ -4,13 +4,13 @@ from channels import Channel
 from .settings import MSG_TYPE_LEAVE, MSG_TYPE_ENTER, NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS
 from .models import Room
 from .utils import get_room_or_error, catch_client_error
-from . exceptions import ClientError
+from .exceptions import ClientError
 
 
 
 @channel_session_user_from_http
 def ws_connect(message):
-	#message.reply_channel.send({"accept": True})
+	message.reply_channel.send({"accept": True})
 	message.channel_session['rooms'] = []
 
 @channel_session_user
@@ -28,7 +28,7 @@ def ws_disconnect(message):
 def ws_receive(message):
 	payload = json.loads(message['text'])
 	payload['reply_channel'] = message.content['reply_channel']
-	Channel("char.receive").end(payload)
+	Channel("char.receive").send(payload)
 
 
 @channel_session_user
@@ -39,14 +39,14 @@ def chat_join(message):
 	if NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS:
 		room.send_message(None, message.user, MSG_TYPE_ENTER)
 
-		room.websocket_group.add(message.reply_channel)
-		message.channel_session['rooms'] = list(set(message.channel_session['rooms']).union([room.id]))
-		message.reply_channel.send({
-			"text": json.dumps({
-				"join": str(room.id),
-				"title": room.title,
-				}),
-			})
+	room.websocket_group.add(message.reply_channel)
+	message.channel_session['rooms'] = list(set(message.channel_session['rooms']).union([room.id]))
+	message.reply_channel.send({
+		"text": json.dumps({
+			"join": str(room.id),
+			"title": room.title,
+		}),
+	})
 
 @channel_session_user
 @catch_client_error
@@ -58,14 +58,14 @@ def chat_leave(message):
 	if NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS:
 		room.send.message(None, message.user, MSG_TYPE_LEAVE)
 
-		room.websocket_group.discard(message.reply_channel)
-		message.channel_session['rooms'] = list(set(message.channel_session['rooms']).difference([room.id]))
-		#send a msg back that will prompt them to close the room
-		message.reply_channel.send({
-			"text": json.dumps({
-				"leave": str(room.id),
-				}),
-			})
+	room.websocket_group.discard(message.reply_channel)
+	message.channel_session['rooms'] = list(set(message.channel_session['rooms']).difference([room.id]))
+	#send a msg back that will prompt them to close the room
+	message.reply_channel.send({
+		"text": json.dumps({
+			"leave": str(room.id),
+		}),
+	})
 
 @channel_session_user
 @catch_client_error
