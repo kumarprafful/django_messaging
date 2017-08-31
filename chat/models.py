@@ -34,11 +34,20 @@ class Room(models.Model):
 		self.websocket_group.send(
 			{"text": json.dumps(final_msg)}
 		)
+		if(message):
+			msg = Message()
+			msg.room = Room.objects.get(pk=self.id)
+			msg.username = user.username
+			msg.message = message
+			msg.save()
 
 
 
 
+class Message(models.Model):
+	room = models.ForeignKey(Room)
+	username = models.CharField(max_length=255)
+	message = models.TextField(max_length=1024)
 
-
-
-	
+	def __str__(self):
+		return self.room.title + self.username

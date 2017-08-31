@@ -14,7 +14,7 @@ websocket_routing = [
 ]
 
 custom_routing = [
-	#handling different chat commands (websocket.receive is decodedand put onto
+	#handling different chat commands (websocket.receive is decoded and put onto
 	# this channel) -routed on the command attribute of the decoded msg
 
 	route("chat.receive", chat_join, command="^join$"),
