@@ -46,10 +46,16 @@
                     var chat = "";
                     for(count=0;count<msgs.length;count++){
                         if(data.username == names[count]){
-                            chat += '<p class="right-move">' + names[count] + " - " + msgs[count] +"</p>";
+                            chat += '<div class="message right-move">' +
+                                        '<span class="username">' + names[count] + "</span>" + 
+                                        "<span class='body'>" + msgs[count] +"</span>" +
+                                    "</div>";
                         }
                         else {
-                            chat += "<p>"+ names[count] + " - " + msgs[count] +"</p>";
+                            chat += '<div class="message">' +
+                                        '<span class="username">' + names[count] + "</span>" + 
+                                        "<span class='body'>" + msgs[count] +"</span>" +
+                                    "</div>";
                         }
                     }
                     var roomdiv = $(
