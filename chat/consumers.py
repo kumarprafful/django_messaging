@@ -41,11 +41,15 @@ def chat_join(message):
 
 	room.websocket_group.add(message.reply_channel)
 	message.channel_session['rooms'] = list(set(message.channel_session['rooms']).union([room.id]))
-	#messages = Message.objects.get(pk=room_id)
+	messages = list(Message.objects.filter(room=room))
+	list_msgs = list(map(lambda m: str(m.message),messages))
+	list_users = list(map(lambda m: str(m.username),messages))
 	message.reply_channel.send({
 		"text": json.dumps({
 			"join": str(room.id),
 			"title": room.title,
+			"msgs": list_msgs,
+			"names": list_users,
 			}),
 	})
 
