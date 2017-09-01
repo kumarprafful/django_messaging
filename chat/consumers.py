@@ -50,6 +50,7 @@ def chat_join(message):
 			"title": room.title,
 			"msgs": list_msgs,
 			"names": list_users,
+			"username": message.user.username,
 			}),
 	})
 

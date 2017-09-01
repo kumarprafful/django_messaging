@@ -138,3 +138,8 @@ p {
         font-weight: bold;
         font-style: italic;
     }
+
+
+.right-move {
+    margin-left: 80%;
+}
