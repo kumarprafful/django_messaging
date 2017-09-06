@@ -1,0 +1,15 @@
+{% extends "../chat/base.html" %}
+
+{% block header_text %}Login{% endblock %}
+
+{% block content %}
+{% if registered %}
+	<h1>Thanks for registering</h1>
+{% else %}
+	<form action="." method="POST">
+		{% csrf_token %}
+		{{ user_form.as_p }}
+		<button>Login</button>
+	</form>
+{% endif %}
+{% endblock %}
