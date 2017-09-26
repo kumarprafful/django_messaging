@@ -24,6 +24,8 @@ def register(request):
 	return render(request, 'registration/user_register.html', {'registered': registered, 'user_form': user_form})
 
 
+# Create your views here.
+
 @login_required
 def index(request):
 	rooms = Room.objects.order_by("title")
